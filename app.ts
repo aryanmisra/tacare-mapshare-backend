@@ -8,7 +8,7 @@ import morganBody from "morgan-body";
 // Routers
 import userRouter from "./controllers/users";
 import authRouter from "./controllers/auth";
-import utilRouter from "./controllers/utility";
+import branchRouter from "./controllers/branch";
 import webhookRouter from "./controllers/webhook";
 
 // Middleware
@@ -18,6 +18,7 @@ import * as config from "./config";
 
 //Setups
 const app: express.Application = express();
+import { createBranch } from "./helpers/setup";
 
 mongoose
   .connect(config.MONGODB_URI, {
@@ -48,9 +49,10 @@ app.get("/", (req: express.Request, res: express.Response) => {
 
 app.use("/user", userRouter);
 app.use("/auth", authRouter);
-app.use("/utility", utilRouter);
+app.use("/branch", branchRouter);
 app.use("/webhook", webhookRouter);
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
+// createBranch()
 export default app;

@@ -1,4 +1,4 @@
-import {model, Schema, Document} from "mongoose";
+import { model, Schema, Document } from "mongoose";
 import bcrypt from "bcrypt";
 export interface UserDoc extends Document {
   firstName: string;
@@ -14,10 +14,10 @@ export interface UserDoc extends Document {
 }
 
 const userSchema = new Schema<UserDoc>({
-  firstName: {type: String},
-  lastName: {type: String},
-  email: {type: String, unique: true, required: true},
-  profilePicture: {type: String},
+  firstName: { type: String },
+  lastName: { type: String },
+  email: { type: String, unique: true, required: true },
+  profilePicture: { type: String },
   userType: {
     type: String,
     enum: ["user", "admin"],
@@ -27,8 +27,8 @@ const userSchema = new Schema<UserDoc>({
     type: Date,
     default: Date.now,
   },
-  password: {type: String, required: true},
-  conservationGroups: [{type: String}]
+  password: { type: String, required: true },
+  conservationGroups: [{ type: String }],
 });
 
 userSchema.methods.generateHash = function (password: string) {
