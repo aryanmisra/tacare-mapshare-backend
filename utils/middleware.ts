@@ -3,6 +3,8 @@ import * as config from "../config";
 const jwt = require("jsonwebtoken");
 const createError = require("http-errors");
 import User from "../models/user";
+const dsConfig = require("../dsconfig.js");
+const DSAuthCodeGrant = require("../lib/DSAuthCodeGrant");
 
 // export const updateProfileSchema = (req, res, next) => {
 //   const schema = Joi.object({
@@ -86,4 +88,16 @@ export const tokenAuthenticator = (req, res, next) => {
 
     next();
   });
+};
+export const dsHandler = (req, res, next) => {
+  res.locals.user = req.user;
+  res.locals.session = req.session;
+  res.locals.dsConfig = dsConfig;
+  res.locals.hostUrl = config.URL; // Used by DSAuthCodeGrant#logout
+  console.log(req.user, req.session);
+  next();
+};
+export const dsCodeGrant = (req, res, next) => {
+  req.dsAuthCodeGrant = new DSAuthCodeGrant(req);
+  next();
 };
