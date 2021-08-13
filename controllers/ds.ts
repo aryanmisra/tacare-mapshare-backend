@@ -146,7 +146,7 @@ const worker = async args => {
 function makeEnvelope(args) {
   let pdfBytes;
 
-  pdfBytes = fs.readFileSync(path.resolve(path.resolve(__dirname, "../demo_documents"), "mapshare_template.pdf"));
+  pdfBytes = fs.readFileSync(path.resolve(path.resolve(__dirname, "../documents"), "mapshare_template.pdf"));
 
   let env = new docusign.EnvelopeDefinition();
   env.emailSubject = "MapShare Virtual Audit: Review Required";
@@ -190,37 +190,44 @@ function makeEnvelope(args) {
   let branchIdText = docusign.Text.constructFromObject({
     value: args.branchId,
     anchorString: "**branch_id**",
-    font: "helvetica",
+    font: "Calibri",
+    fontSize: "Size14"
   });
   let branchNoteText = docusign.Text.constructFromObject({
     value: args.branchNote,
     anchorString: "**branch_notes**",
-    font: "helvetica",
+    font: "Calibri",
+    fontSize: "Size14"
   });
   let modificationNoteText = docusign.Text.constructFromObject({
     value: args.modificationNote,
     anchorString: "**modification_notes**",
-    font: "helvetica",
+    font: "Calibri",
+    fontSize: "Size14"
   });
   let branchOwnerName = docusign.Text.constructFromObject({
     value: args.branchOwnerName,
     anchorString: "**branchOwner_name**",
-    font: "helvetica",
+    font: "Calibri",
+    fontSize: "Size12"
   });
   let branchOwnerEmail = docusign.Text.constructFromObject({
     value: args.branchOwnerEmail,
     anchorString: "**branchOwner_email**",
-    font: "helvetica",
+    font: "Calibri",
+    fontSize: "Size12"
   });
   let adminName = docusign.Text.constructFromObject({
     value: args.adminName,
     anchorString: "**admin_name**",
-    font: "helvetica",
+    font: "Calibri",
+    fontSize: "Size12"
   });
   let adminEmail = docusign.Text.constructFromObject({
     value: args.adminEmail,
     anchorString: "**admin_email**",
-    font: "helvetica",
+    font: "Calibri",
+    fontSize: "Size12"
   });
   let documentTabs = docusign.Tabs.constructFromObject({
     signHereTabs: [signField],
@@ -250,7 +257,7 @@ function imageDocGen(args) {
         <meta charset="UTF-8">
       </head>
       <body>
-      <img src="${args.imageBase64}" alt="TACARE MAPSHARE VIRTUAL AUDIT IMAGE" style="width:80%;left:20px;position:absolute;top:20px;"/>
+      <img src="${args.imageBase64}" alt="TACARE MAPSHARE VIRTUAL AUDIT IMAGE"/>
       </body>
   </html>
 `

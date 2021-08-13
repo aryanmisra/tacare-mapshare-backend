@@ -11,7 +11,7 @@ exports.config = {
   sessionSecret: "12345",
   allowSilentAuthentication: true,
   targetAccountId: null,
-  demoDocPath: "demo_documents",
+  demoDocPath: "documents",
   docDocx: "mapshare_template.docx",
   docPdf: "mapshare_template.pdf",
   gatewayAccountId: "{DS_PAYMENT_GATEWAY_ID}",
