@@ -261,12 +261,6 @@ function makeEnvelope(args) {
     font: "Calibri",
     fontSize: "Size14"
   });
-  let modificationNoteText = docusign.Text.constructFromObject({
-    value: args.modificationNote,
-    anchorString: "**modification_notes**",
-    font: "Calibri",
-    fontSize: "Size14"
-  });
   let branchOwnerName = docusign.Text.constructFromObject({
     value: args.branchOwnerName,
     anchorString: "**branchOwner_name**",
