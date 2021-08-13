@@ -33,8 +33,7 @@ const app: express.Application = express();
 
 const HOST = process.env.HOST || "localhost",
   hostUrl = "http://" + HOST + ":" + config.PORT,
-  max_session_min = 180,
-  csrfProtection = csrf({cookie: true});
+  max_session_min = 180
 
 mongoose
   .connect(config.MONGODB_URI, {

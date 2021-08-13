@@ -15,7 +15,7 @@ export interface BranchDoc extends Document {
     denials: number;
     pending: number;
   };
-  active: boolean;
+  status: number;
 }
 const branchSchema = new Schema<BranchDoc>({
   conservationSlug: {type: String, required: true},
@@ -33,7 +33,7 @@ const branchSchema = new Schema<BranchDoc>({
     denials: {type: Number, required: true, default: 0},
     pending: {type: Number, required: true, default: 0},
   },
-  active: {type: Boolean, default: true}
+  status: {type: Number, required: true, default: 0}
 }, {timestamps: true});
 
 const Branch = model<BranchDoc>("Branch", branchSchema);

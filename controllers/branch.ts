@@ -104,4 +104,46 @@ branchRouter.get("/:id", async (req, res, next) => {
   }
 })
 
+branchRouter.delete("/:id", async (req, res, next) => {
+  const user = await User.findById(req.uid).exec()
+  if (user) {
+    const branch = await Branch.findOne({slug: req.params.id}).exec()
+    if (branch) {
+      if (req.uid !== branch.owner) {
+        res.sendStatus(403)
+      }
+      branch.status = 2;
+      await branch.save()
+      res.sendStatus(200)
+    } else {
+      res.sendStatus(400)
+    }
+  } else {
+    next(createError(406, "User does not exist within database."));
+  }
+})
+
+branchRouter.delete("/commit/:id", async (req, res, next) => {
+  const user = await User.findById(req.uid).exec()
+  if (user) {
+    const commit = await Commit.findOne({slug: req.params.id}).exec()
+    if (commit) {
+      const branch = await Branch.findOne({slug: commit.branchSlug}).exec()
+      if (branch) {
+        if (req.uid !== branch.owner) {
+          res.sendStatus(403)
+        }
+        await Commit.deleteMany({branchSlug: branch.slug, order: {$gt: commit.order}}).exec()
+        res.sendStatus(200)
+      } else {
+        res.sendStatus(400)
+      }
+    } else {
+      res.sendStatus(400)
+    }
+  } else {
+    next(createError(406, "User does not exist within database."));
+  }
+})
+
 export default branchRouter;
