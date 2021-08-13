@@ -17,9 +17,9 @@ branchRouter.get("/conservations", async (req, res, next) => {
   }
 });
 
-branchRouter.get("/all", async (req, res, next) => {
+branchRouter.get("/conservation/:id", async (req, res, next) => {
   try {
-    const branches = await Branch.find({}).exec();
+    const branches = await Branch.find({conservationSlug: req.params.id}).exec();
     res.json(branches);
   } catch (e) {
     next(e);

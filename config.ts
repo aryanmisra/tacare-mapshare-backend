@@ -4,8 +4,6 @@ require("dotenv").config();
 Please contact us for credentials to access database.
 
 */
-
-
 export const PORT = process.env.PORT ? process.env.PORT : 5000;
 export const MONGODB_URI = process.env.MONGODB_URI;
 export const URL = process.env.ENVIRONMENT === "production" ? "https://tacare-api.herokuapp.com/" : "http://localhost:5000";
