@@ -82,14 +82,9 @@ branchRouter.post("/commit", tokenAuthenticator, async (req, res, next) => {
   }
 });
 
-branchRouter.get("/:id/commits", tokenAuthenticator, async (req, res, next) => {
-  const user = await User.findById(req.uid).exec();
-  if (user) {
-    const commits = await Commit.find({branchSlug: req.params.id}).sort({order: -1}).exec();
-    res.json(commits);
-  } else {
-    next(createError(406, "User does not exist within database."));
-  }
+branchRouter.get("/:id/commits", async (req, res, next) => {
+  const commits = await Commit.find({branchSlug: req.params.id}).sort({order: -1}).exec();
+  res.json(commits);
 });
 
 branchRouter.get("/:id", async (req, res, next) => {

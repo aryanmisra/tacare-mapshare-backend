@@ -33,8 +33,8 @@ dsRouter
 dsRouter.get("/audit/:id/:uid", async (req, res, next) => {
   console.log(req.params.id, req.params.uid);
 
-  const branch = await Branch.findOne({ slug: req.params.id }).exec();
-  const admin = await User.findOne({ _id: req.params.uid }).exec();
+  const branch = await Branch.findOne({slug: req.params.id}).exec();
+  const admin = await User.findOne({_id: req.params.uid}).exec();
   if (branch && admin) {
     let tokenOK = req.dsAuthCodeGrant.checkToken();
     if (tokenOK) {
@@ -57,23 +57,23 @@ dsRouter.post("/audit/:id/:uid", async (req, res, next) => {
     req.dsAuthCodeGrant.setEg(req, `audit/${req.params.id}/${req.params.uid}`);
     res.redirect("/ds/mustAuthenticate");
   }
-  const stakeholders = await User.find({ userType: "user" }).exec();
-  const branch = await Branch.findOne({ slug: req.params.id }).exec();
+  const stakeholders = await User.find({userType: "user"}).exec();
+  const branch = await Branch.findOne({slug: req.params.id}).exec();
   const admin = await User.findById(req.params.uid).exec();
-  const lastCommit = await Commit.findOne({ branchSlug: req.params.id }).sort({ order: -1 }).exec();
+  const lastCommit = await Commit.findOne({branchSlug: req.params.id}).sort({order: -1}).exec();
 
   let body = req.body;
   let envelopeArgs = {
-      stakeholders: stakeholders,
-      status: "sent",
-      branchId: branch?.slug,
-      branchNote: branch?.note,
-      modificationNote: lastCommit?.note,
-      branchOwnerName: branch?.owner.firstName + " " + branch?.owner.lastName,
-      branchOwnerEmail: branch?.owner.email,
-      adminName: admin?.firstName + " " + admin?.lastName,
-      adminEmail: admin?.email,
-    },
+    stakeholders: stakeholders,
+    status: "sent",
+    branchId: branch?.slug,
+    branchNote: branch?.note,
+    modificationNote: lastCommit?.note,
+    branchOwnerName: branch?.owner.firstName + " " + branch?.owner.lastName,
+    branchOwnerEmail: branch?.owner.email,
+    adminName: admin?.firstName + " " + admin?.lastName,
+    adminEmail: admin?.email,
+  },
     accountId = req.dsAuthCodeGrant.getAccountId(),
     dsAPIclient = req.dsAuthCodeGrant.getDSApi(),
     args = {
@@ -90,7 +90,7 @@ dsRouter.post("/audit/:id/:uid", async (req, res, next) => {
       errorCode = errorBody && errorBody.errorCode,
       errorMessage = errorBody && errorBody.message;
 
-    res.render("pages/error", { err: error, errorCode: errorCode, errorMessage: errorMessage });
+    res.render("pages/error", {err: error, errorCode: errorCode, errorMessage: errorMessage});
   }
   if (results) {
     console.log(results);
@@ -116,11 +116,11 @@ const worker = async args => {
 
   // Step 2. call Envelopes::create API method
   // Exceptions will be caught by the calling function
-  results = await createEnvelopeP(args.accountId, { envelopeDefinition: envelope });
+  results = await createEnvelopeP(args.accountId, {envelopeDefinition: envelope});
   let envelopeId = results.envelopeId;
 
   console.log(`Envelope was created. EnvelopeId ${envelopeId}`);
-  return { envelopeId: envelopeId };
+  return {envelopeId: envelopeId};
 };
 
 function makeEnvelope(args) {

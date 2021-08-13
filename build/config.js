@@ -1,13 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.dsClientSecret =
-  exports.dsClientId =
-  exports.JWT_KEY =
-  exports.EMAIL_KEY =
-  exports.URL =
-  exports.MONGODB_URI =
-  exports.PORT =
-    void 0;
+exports.dsClientSecret = exports.dsClientId = exports.JWT_KEY = exports.EMAIL_KEY = exports.URL = exports.MONGODB_URI = exports.PORT = void 0;
 require("dotenv").config();
 exports.PORT = process.env.PORT ? process.env.PORT : 5000;
 exports.MONGODB_URI = process.env.MONGODB_URI;

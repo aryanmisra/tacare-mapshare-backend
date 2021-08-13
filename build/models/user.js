@@ -1,37 +1,32 @@
 "use strict";
-var __importDefault =
-  (this && this.__importDefault) ||
-  function (mod) {
-    return mod && mod.__esModule ? mod : { default: mod };
-  };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const userSchema = new mongoose_1.Schema(
-  {
+const userSchema = new mongoose_1.Schema({
     firstName: { type: String },
     lastName: { type: String },
     email: { type: String, unique: true, required: true },
     profilePicture: { type: String },
     userType: {
-      type: String,
-      enum: ["user", "admin"],
-      default: "user",
+        type: String,
+        enum: ["user", "admin"],
+        default: "user",
     },
     created: {
-      type: Date,
-      default: Date.now,
+        type: Date,
+        default: Date.now,
     },
     password: { type: String, required: true },
     conservationGroups: [{ type: String }],
-  },
-  { timestamps: true }
-);
+}, { timestamps: true });
 userSchema.methods.generateHash = function (password) {
-  return bcrypt_1.default.hashSync(password, 10);
+    return bcrypt_1.default.hashSync(password, 10);
 };
 userSchema.methods.validatePassword = function (password) {
-  return bcrypt_1.default.compareSync(password, this.password);
+    return bcrypt_1.default.compareSync(password, this.password);
 };
 const User = mongoose_1.model("User", userSchema);
 exports.default = User;
