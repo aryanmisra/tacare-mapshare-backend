@@ -277,12 +277,6 @@ function makeEnvelope(args) {
     font: "Calibri",
     fontSize: "Size14"
   });
-  let modificationNoteText = docusign.Text.constructFromObject({
-    value: args.modificationNote,
-    anchorString: "**modification_notes**",
-    font: "Calibri",
-    fontSize: "Size14"
-  });
   let branchOwnerName = docusign.Text.constructFromObject({
     value: args.branchOwnerName,
     anchorString: "**branchOwner_name**",
@@ -309,7 +303,7 @@ function makeEnvelope(args) {
   });
   let documentTabs = docusign.Tabs.constructFromObject({
     signHereTabs: [signField],
-    textTabs: [branchIdText, branchNoteText, modificationNoteText, branchOwnerName, branchOwnerEmail, adminName, adminEmail],
+    textTabs: [branchIdText, branchNoteText, branchOwnerName, branchOwnerEmail, adminName, adminEmail],
   });
   signers.forEach(signer => {
     signer.tabs = documentTabs;
