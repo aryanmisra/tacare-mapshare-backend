@@ -2,7 +2,6 @@ import Joi from "joi";
 import * as config from "../config";
 const jwt = require("jsonwebtoken");
 const createError = require("http-errors");
-import User from "../models/user";
 const dsConfig = require("../dsconfig.js");
 const DSAuthCodeGrant = require("../lib/DSAuthCodeGrant");
 
@@ -31,7 +30,7 @@ const validateRequest = (req, next, schema) => {
     allowUnknown: true, // ignore unknown props
     stripUnknown: true, // remove unknown props
   };
-  const { error, value } = schema.validate(req.body, options);
+  const {error, value} = schema.validate(req.body, options);
   if (error) {
     next(createError(400, `Validation Error`));
   } else {
@@ -51,7 +50,7 @@ export const requestLogger = (req, res, next) => {
 };
 
 export const unknownEndpoint = (req, res) => {
-  res.status(404).send({ error: "unknown endpoint" });
+  res.status(404).send({error: "unknown endpoint"});
 };
 
 export const errorHandler = (error, req, res, next) => {
