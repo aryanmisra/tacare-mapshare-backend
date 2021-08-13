@@ -48,4 +48,5 @@ authRouter.get("/verifytoken", middleware.tokenAuthenticator, (req, res) => {
 });
 
 
+
 export default authRouter;
