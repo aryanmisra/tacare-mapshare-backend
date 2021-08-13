@@ -1,10 +1,10 @@
 import Conservation from "../models/conservation";
 import Branch from "../models/branch";
 import User from "../models/user";
-import { randomBytes } from "crypto";
+import {randomBytes} from "crypto";
 import Commit from "../models/commit";
 const createError = require("http-errors");
-import { tokenAuthenticator } from "../utils/middleware";
+import {tokenAuthenticator} from "../utils/middleware";
 
 const branchRouter = require("express").Router();
 
@@ -28,7 +28,7 @@ branchRouter.get("/all", async (req, res, next) => {
 
 branchRouter.post("/create", tokenAuthenticator, async (req, res, next) => {
   const user = await User.findById(req.uid).exec();
-  const { branchNote, commitNote, features, conservationSlug } = req.body;
+  const {branchNote, commitNote, features, conservationSlug} = req.body;
   if (user) {
     const branchSlug = randomBytes(8).toString("hex");
     const branch = new Branch({
@@ -60,9 +60,9 @@ branchRouter.post("/create", tokenAuthenticator, async (req, res, next) => {
 
 branchRouter.post("/commit", tokenAuthenticator, async (req, res, next) => {
   const user = await User.findById(req.uid).exec();
-  const { branchSlug, commitNote, features } = req.body;
+  const {branchSlug, commitNote, features} = req.body;
   if (user) {
-    const maxCommit = await Commit.findOne({ branchSlug: branchSlug }).sort({ order: -1 }).exec();
+    const maxCommit = await Commit.findOne({branchSlug: branchSlug}).sort({order: -1}).exec();
     let order = 1;
     if (maxCommit) {
       order = maxCommit.order + 1;
@@ -85,27 +85,22 @@ branchRouter.post("/commit", tokenAuthenticator, async (req, res, next) => {
 branchRouter.get("/:id/commits", tokenAuthenticator, async (req, res, next) => {
   const user = await User.findById(req.uid).exec();
   if (user) {
-    const commits = await Commit.find({ branchSlug: req.params.id }).sort({ order: -1 }).exec();
+    const commits = await Commit.find({branchSlug: req.params.id}).sort({order: -1}).exec();
     res.json(commits);
   } else {
     next(createError(406, "User does not exist within database."));
   }
 });
 
-branchRouter.get("/:id", tokenAuthenticator, async (req, res, next) => {
-  const user = await User.findById(req.uid).exec();
-  if (user) {
-    const branch = await Branch.findOne({ slug: req.params.id }).exec();
-    res.json(branch);
-  } else {
-    next(createError(406, "User does not exist within database."));
-  }
+branchRouter.get("/:id", async (req, res, next) => {
+  const branch = await Branch.findOne({slug: req.params.id}).exec();
+  res.json(branch);
 });
 
 branchRouter.delete("/:id", tokenAuthenticator, async (req, res, next) => {
   const user = await User.findById(req.uid).exec();
   if (user) {
-    const branch = await Branch.findOne({ slug: req.params.id }).exec();
+    const branch = await Branch.findOne({slug: req.params.id}).exec();
     if (branch) {
       branch.status = 2;
       await branch.save();
@@ -121,11 +116,11 @@ branchRouter.delete("/:id", tokenAuthenticator, async (req, res, next) => {
 branchRouter.delete("/commit/:id", tokenAuthenticator, async (req, res, next) => {
   const user = await User.findById(req.uid).exec();
   if (user) {
-    const commit = await Commit.findOne({ slug: req.params.id }).exec();
+    const commit = await Commit.findOne({slug: req.params.id}).exec();
     if (commit) {
-      const branch = await Branch.findOne({ slug: commit.branchSlug }).exec();
+      const branch = await Branch.findOne({slug: commit.branchSlug}).exec();
       if (branch) {
-        await Commit.deleteMany({ branchSlug: branch.slug, order: { $gt: commit.order } }).exec();
+        await Commit.deleteMany({branchSlug: branch.slug, order: {$gt: commit.order}}).exec();
         res.sendStatus(200);
       } else {
         res.sendStatus(400);
@@ -143,9 +138,9 @@ branchRouter.get("/merge/:id", tokenAuthenticator, async (req, res, next) => {
   if (user) {
     // add checks for audit status
 
-    const branch = await Branch.findOne({ slug: req.params.id }).exec();
-    const relevantCommit = await Commit.findOne({ branchSlug: req.params.id }).sort({ order: -1 }).exec();
-    const maxCommit = await Commit.findOne({ branchSlug: "main" }).sort({ order: -1 }).exec();
+    const branch = await Branch.findOne({slug: req.params.id}).exec();
+    const relevantCommit = await Commit.findOne({branchSlug: req.params.id}).sort({order: -1}).exec();
+    const maxCommit = await Commit.findOne({branchSlug: "main"}).sort({order: -1}).exec();
     const commitSlug = randomBytes(8).toString("hex");
     let order = 1;
     if (maxCommit) {
