@@ -16,8 +16,8 @@ exports.config = {
 
   targetAccountId: null, // Set if you want a specific DocuSign AccountId, If null, the user's default account will be used.
   demoDocPath: "demo_documents",
-  docDocx: "World_Wide_Corp_Battle_Plan_Trafalgar.docx",
-  docPdf: "World_Wide_Corp_lorem.pdf",
+  docDocx: "mapshare_template.docx",
+  docPdf: "mapshare_template.pdf",
   // Payment gateway information is optional
   gatewayAccountId: process.env.DS_PAYMENT_GATEWAY_ID || "{DS_PAYMENT_GATEWAY_ID}",
   gatewayName: "stripe",
