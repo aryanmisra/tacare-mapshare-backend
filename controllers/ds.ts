@@ -92,6 +92,7 @@ dsRouter.post("/audit/:id/:uid", async (req, res, next) => {
     branchOwnerEmail: branch?.owner.email,
     adminName: admin?.firstName + " " + admin?.lastName,
     adminEmail: admin?.email,
+    imageBase64: branch?.imageBase64
   },
     accountId = req.dsAuthCodeGrant.getAccountId(),
     dsAPIclient = req.dsAuthCodeGrant.getDSApi(),
@@ -149,15 +150,20 @@ function makeEnvelope(args) {
 
   let env = new docusign.EnvelopeDefinition();
   env.emailSubject = "MapShare Virtual Audit: Review Required";
+  let imageDoc = new docusign.Document()
+  let imageDocb64 = Buffer.from(imageDocGen(args)).toString('base64')
+  let pdfDoc = new docusign.Document(),
+    pdfDocb64 = Buffer.from(pdfBytes).toString("base64");
+  pdfDoc.documentBase64 = pdfDocb64;
+  pdfDoc.name = "Virtual Audit Request"; // can be different from actual file name
+  pdfDoc.fileExtension = "pdf";
+  pdfDoc.documentId = "1";
+  imageDoc.documentBase64 = imageDocb64;
+  imageDoc.name = "Virtual Audit Image"
+  imageDoc.fileExtension = "html"
+  imageDoc.documentId = "2"
 
-  let doc3 = new docusign.Document(),
-    doc3b64 = Buffer.from(pdfBytes).toString("base64");
-  doc3.documentBase64 = doc3b64;
-  doc3.name = "Virtual Audit Request"; // can be different from actual file name
-  doc3.fileExtension = "pdf";
-  doc3.documentId = "1";
-
-  env.documents = [doc3];
+  env.documents = [pdfDoc, imageDoc];
 
   const signers: any[] = [];
   let i = 1;
@@ -236,7 +242,7 @@ function makeEnvelope(args) {
   return env;
 }
 
-function imageDoc(args) {
+function imageDocGen(args) {
   return `
   <!DOCTYPE html>
   <html>
