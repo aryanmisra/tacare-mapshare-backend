@@ -48,6 +48,62 @@ dsRouter.post("/audit/image/:id", tokenAuthenticator, async (req, res, next) => 
   }
 })
 
+dsRouter.get("/audit/status/:id", async (req, res, next) => {
+  const branch = await Branch.findOne({slug: req.params.id}).exec()
+  let tokenOK = req.dsAuthCodeGrant.checkToken();
+  if (tokenOK) {
+    res.render('pages/updateAuditStatus', {
+      title: "Update Audit Status",
+      envelopeOk: branch,
+      eid: branch?.auditStatus.envelopeId
+    });
+  } else {
+    // Save the current operation so it will be resumed after authentication
+    req.dsAuthCodeGrant.setEg(req, `audit/status/${req.params.id}`);
+    res.redirect("/ds/mustAuthenticate");
+  }
+})
+
+dsRouter.post("/audit/status/:id", async (req, res, next) => {
+  const branch = await Branch.findOne({slug: req.params.id}).exec()
+  let tokenOK = req.dsAuthCodeGrant.checkToken(3);
+  if (!tokenOK) {
+    req.flash('info', 'Sorry, you need to re-authenticate.');
+    req.dsAuthCodeGrant.setEg(req, `audit/status/${req.params.id}`);
+    res.redirect("/ds/mustAuthenticate");
+  }
+
+  // Step 2. Call the worker method
+  let accountId = req.dsAuthCodeGrant.getAccountId()
+    , dsAPIclient = req.dsAuthCodeGrant.getDSApi()
+    , args = {
+      dsAPIclient: dsAPIclient,
+      makePromise: req.dsAuthCodeGrant.makePromise, // this is a function
+      accountId: accountId,
+      envelopeId: branch?.auditStatus.envelopeId
+    }, results;
+
+  try {
+    results = await statusWorker(args)
+    console.log(results)
+  }
+  catch (error) {
+    let errorBody = error && error.response && error.response.body
+      , errorCode = errorBody && errorBody.errorCode
+      , errorMessage = errorBody && errorBody.message;
+
+    res.render('pages/error', {err: error, errorCode: errorCode, errorMessage: errorMessage});
+  }
+  if (results) {
+    res.render('pages/example_done', {
+      title: "Get envelope status results",
+      h1: "Get envelope status results",
+      message: `Results from the Envelopes::get method:`,
+      json: JSON.stringify(results)
+    });
+  }
+})
+
 dsRouter.get("/audit/:id/:uid", async (req, res, next) => {
   console.log(req.params.id, req.params.uid);
 
@@ -81,7 +137,6 @@ dsRouter.post("/audit/:id/:uid", async (req, res, next) => {
   const admin = await User.findById(req.params.uid).exec();
   const lastCommit = await Commit.findOne({branchSlug: req.params.id}).sort({order: -1}).exec();
 
-  let body = req.body;
   let envelopeArgs = {
     stakeholders: stakeholders,
     status: "sent",
@@ -126,7 +181,14 @@ dsRouter.post("/audit/:id/:uid", async (req, res, next) => {
     });
   }
 });
-
+const statusWorker = async (args) => {
+  let envelopesApi = new docusign.EnvelopesApi(args.dsAPIclient)
+    , getEnvelopeP = args.makePromise(envelopesApi, 'listRecipients')
+    , results;
+  ;
+  results = await getEnvelopeP(args.accountId, args.envelopeId, null);
+  return results;
+}
 const worker = async args => {
   let envelopesApi = new docusign.EnvelopesApi(args.dsAPIclient),
     createEnvelopeP = args.makePromise(envelopesApi, "createEnvelope"),

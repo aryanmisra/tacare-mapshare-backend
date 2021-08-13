@@ -1,0 +1,22 @@
+<%- include ("../partials/head") %>
+
+    <h4>Update Virtual Audit Status</h4>
+
+    <p>Envelope ID: <%= eid %>
+    </p>
+
+    <% if (envelopeOk) { %>
+
+        <form class="eg" action="" method="post" data-busy="form">
+            <button type="submit" class="btn btn-primary">Continue</button>
+        </form>
+
+        <% } else { %>
+            <p>Envelope not found.</p>
+
+            <form class="eg" action="eg002" method="get">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </form>
+            <% } %>
+
+                <%- include ("../partials/foot") %>
