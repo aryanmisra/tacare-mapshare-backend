@@ -26,7 +26,7 @@ branchRouter.get("/all", async (req, res, next) => {
   }
 });
 
-branchRouter.post("/create", async (req, res, next) => {
+branchRouter.post("/create", tokenAuthenticator, async (req, res, next) => {
   const user = await User.findById(req.uid).exec();
   const {branchNote, commitNote, geometry, attributes, conservationSlug} = req.body;
   if (user) {
@@ -59,7 +59,7 @@ branchRouter.post("/create", async (req, res, next) => {
   }
 })
 
-branchRouter.post("/commit", async (req, res, next) => {
+branchRouter.post("/commit", tokenAuthenticator, async (req, res, next) => {
   const user = await User.findById(req.uid).exec();
   const {branchSlug, commitNote, geometry, attributes} = req.body;
   if (user) {
@@ -84,7 +84,7 @@ branchRouter.post("/commit", async (req, res, next) => {
   }
 })
 
-branchRouter.get("/:id/commits", async (req, res, next) => {
+branchRouter.get("/:id/commits", tokenAuthenticator, async (req, res, next) => {
   const user = await User.findById(req.uid).exec();
   if (user) {
     const commits = await Commit.find({branchSlug: req.params.id}).sort({order: -1}).exec()
@@ -94,7 +94,7 @@ branchRouter.get("/:id/commits", async (req, res, next) => {
   }
 })
 
-branchRouter.get("/:id", async (req, res, next) => {
+branchRouter.get("/:id", tokenAuthenticator, async (req, res, next) => {
   const user = await User.findById(req.uid).exec();
   if (user) {
     const branch = await Branch.findOne({slug: req.params.id}).exec()
@@ -104,7 +104,7 @@ branchRouter.get("/:id", async (req, res, next) => {
   }
 })
 
-branchRouter.delete("/:id", async (req, res, next) => {
+branchRouter.delete("/:id", tokenAuthenticator, async (req, res, next) => {
   const user = await User.findById(req.uid).exec()
   if (user) {
     const branch = await Branch.findOne({slug: req.params.id}).exec()
@@ -123,7 +123,7 @@ branchRouter.delete("/:id", async (req, res, next) => {
   }
 })
 
-branchRouter.delete("/commit/:id", async (req, res, next) => {
+branchRouter.delete("/commit/:id", tokenAuthenticator, async (req, res, next) => {
   const user = await User.findById(req.uid).exec()
   if (user) {
     const commit = await Commit.findOne({slug: req.params.id}).exec()
