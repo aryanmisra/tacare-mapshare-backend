@@ -287,7 +287,7 @@ function makeEnvelope(args) {
   });
   let documentTabs = docusign.Tabs.constructFromObject({
     signHereTabs: [signField],
-    textTabs: [branchIdText, branchNoteText, modificationNoteText, branchOwnerName, branchOwnerEmail, adminName, adminEmail],
+    textTabs: [branchIdText, branchNoteText, branchOwnerName, branchOwnerEmail, adminName, adminEmail],
   });
   signers.forEach(signer => {
     signer.tabs = documentTabs;
