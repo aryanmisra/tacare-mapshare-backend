@@ -2,6 +2,7 @@ import User from "../models/user";
 import Branch from "../models/branch";
 import Commit from "../models/commit";
 import docusign from "docusign-esign";
+import {tokenAuthenticator} from "../utils/middleware";
 const dsConfig = require("../dsconfig.js").config;
 const fs = require("fs-extra");
 const path = require("path");
@@ -30,6 +31,23 @@ dsRouter
   .get("/ds/mustAuthenticate", commonControllers.mustAuthenticateController)
   .get("/ds-return", commonControllers.returnController);
 
+dsRouter.post("/audit/image/:id", tokenAuthenticator, async (req, res, next) => {
+  const {imageBase64} = req.body;
+  const branch = await Branch.findOne({slug: req.params.id})
+  const admin = await User.findById(req.uid).exec();
+  if (branch && admin) {
+    if (admin.userType !== "admin") {
+      res.sendStatus(403)
+    } else {
+      branch.imageBase64 = imageBase64;
+      await branch.save()
+      res.sendStatus(200)
+    }
+  } else {
+    res.sendStatus(400)
+  }
+})
+
 dsRouter.get("/audit/:id/:uid", async (req, res, next) => {
   console.log(req.params.id, req.params.uid);
 
@@ -49,6 +67,7 @@ dsRouter.get("/audit/:id/:uid", async (req, res, next) => {
     res.status(400).send("Invalid Request");
   }
 });
+
 dsRouter.post("/audit/:id/:uid", async (req, res, next) => {
   console.log(req.params.id);
   let tokenOK = req.dsAuthCodeGrant.checkToken(3);
@@ -216,4 +235,19 @@ function makeEnvelope(args) {
 
   return env;
 }
+
+function imageDoc(args) {
+  return `
+  <!DOCTYPE html>
+  <html>
+      <head>
+        <meta charset="UTF-8">
+      </head>
+      <body style="font-family:sans-serif;margin-left:2em;">
+      <img src="data:image/png;base64, ${args.imageBase64}" alt="Red dot" />
+      </body>
+  </html>
+`
+}
+
 export default dsRouter;
