@@ -194,12 +194,12 @@ function makeEnvelope(args) {
   });
   let branchNoteText = docusign.Text.constructFromObject({
     value: args.branchNote,
-    anchorString: "**branch_note**",
+    anchorString: "**branch_notes**",
     font: "helvetica",
   });
   let modificationNoteText = docusign.Text.constructFromObject({
     value: args.modificationNote,
-    anchorString: "**modification_note**",
+    anchorString: "**modification_notes**",
     font: "helvetica",
   });
   let branchOwnerName = docusign.Text.constructFromObject({
@@ -250,7 +250,7 @@ function imageDocGen(args) {
         <meta charset="UTF-8">
       </head>
       <body>
-      <img src="${args.imageBase64}" alt="TACARE MAPSHARE VIRTUAL AUDIT IMAGE" style="width:80vw;left:10vw;position:absolute;top:5vh;"/>
+      <img src="${args.imageBase64}" alt="TACARE MAPSHARE VIRTUAL AUDIT IMAGE" style="width:80%;left:10%;position:absolute;top:5%;"/>
       </body>
   </html>
 `
