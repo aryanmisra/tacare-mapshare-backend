@@ -85,6 +85,22 @@ dsRouter.post("/audit/status/:id", async (req, res, next) => {
 
   try {
     results = await statusWorker(args)
+    var pending = 0;
+    var approved = 0;
+    var declined = 0;
+    results.signers.forEach((signer) => {
+      if (signer.status == "completed") {
+        approved += 1
+      } else if (signer.status == "declined") {
+        declined += 1
+      } else {
+        pending += 1
+      }
+    })
+    branch.auditStatus.pending = pending;
+    branch.auditStatus.approvals = approved;
+    branch.auditStatus.denials = declined;
+    await branch.save()
     console.log(results)
   }
   catch (error) {
@@ -96,10 +112,10 @@ dsRouter.post("/audit/status/:id", async (req, res, next) => {
   }
   if (results) {
     res.render('pages/example_done', {
-      title: "Get envelope status results",
-      h1: "Get envelope status results",
-      message: `Results from the Envelopes::get method:`,
-      json: JSON.stringify(results)
+      title: "Update Status Results",
+      h1: `Envelope ID: ${branch?.auditStatus.envelopeId}`,
+      message: `Results from the Branch ID: ${branch?.slug}`,
+      json: JSON.stringify({"Completed": approved, "Pending": pending, "Declined": declined})
     });
   }
 })
