@@ -23,7 +23,20 @@ import * as middleware from "./utils/middleware";
 import * as logger from "./utils/logger";
 import * as config from "./config";
 const dsConfig = require("./dsconfig.js");
-const eg002 = require("./lib/examples/eg002");
+const eg001 = require('./lib/examples/eg001')
+  , eg002 = require('./lib/examples/eg002')
+  , eg003 = require('./lib/examples/eg003')
+  , eg004 = require('./lib/examples/eg004')
+  , eg005 = require('./lib/examples/eg005')
+  , eg006 = require('./lib/examples/eg006')
+  , eg007 = require('./lib/examples/eg007')
+  , eg008 = require('./lib/examples/eg008')
+  , eg009 = require('./lib/examples/eg009')
+  , eg010 = require('./lib/examples/eg010')
+  , eg011 = require('./lib/examples/eg011')
+  , eg012 = require('./lib/examples/eg012')
+  , eg013 = require('./lib/examples/eg013')
+  , eg014 = require('./lib/examples/eg014');
 
 //Setups
 const app: express.Application = express();
@@ -48,14 +61,14 @@ mongoose
 
 app.use(cors());
 app.options("*", cors());
-app.use(express.urlencoded({ extended: false, limit: "1mb" }));
+app.use(express.urlencoded({extended: false, limit: "1mb"}));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser());
 app.use(
   session({
     secret: "12345",
     name: "Tacare MapShare",
-    cookie: { maxAge: max_session_min * 60000 },
+    cookie: {maxAge: max_session_min * 60000},
     saveUninitialized: true,
     resave: true,
     store: new MemoryStore({
@@ -65,7 +78,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.json({ limit: "1mb" }));
+app.use(express.json({limit: "1mb"}));
 app.use(middleware.dsHandler);
 app.use(flash());
 app.use(
@@ -106,8 +119,32 @@ app.use("/user", userRouter);
 app.use("/auth", authRouter);
 app.use("/branch", branchRouter);
 app.use("/", dsRouter);
-
-app.get("/eg002", eg002.getController).post("/eg002", eg002.createController);
+app.get('/eg001', eg001.getController)
+  .post('/eg001', eg001.createController)
+app.get("/eg002", eg002.getController).post("/eg002", eg002.createController).get('/eg003', eg003.getController)
+  .post('/eg003', eg003.createController)
+  .get('/eg004', eg004.getController)
+  .post('/eg004', eg004.createController)
+  .get('/eg005', eg005.getController)
+  .post('/eg005', eg005.createController)
+  .get('/eg006', eg006.getController)
+  .post('/eg006', eg006.createController)
+  .get('/eg007', eg007.getController)
+  .post('/eg007', eg007.createController)
+  .get('/eg008', eg008.getController)
+  .post('/eg008', eg008.createController)
+  .get('/eg009', eg009.getController)
+  .post('/eg009', eg009.createController)
+  .get('/eg010', eg010.getController)
+  .post('/eg010', eg010.createController)
+  .get('/eg011', eg011.getController)
+  .post('/eg011', eg011.createController)
+  .get('/eg012', eg012.getController)
+  .post('/eg012', eg012.createController)
+  .get('/eg013', eg013.getController)
+  .post('/eg013', eg013.createController)
+  .get('/eg014', eg014.getController)
+  .post('/eg014', eg014.createController)
 
 passport.serializeUser(function (user, done) {
   done(null, user);
@@ -142,7 +179,7 @@ const docusignStrategy = new DocusignStrategy(
 if (!dsConfig.allowSilentAuthentication) {
   // See https://stackoverflow.com/a/32877712/64904
   docusignStrategy.authorizationParams = function (options) {
-    return { prompt: "login" };
+    return {prompt: "login"};
   };
 }
 passport.use(docusignStrategy);
