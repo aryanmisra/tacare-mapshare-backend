@@ -29,6 +29,7 @@ branchRouter.get("/all", async (req, res, next) => {
 branchRouter.post("/create", tokenAuthenticator, async (req, res, next) => {
   const user = await User.findById(req.uid).exec();
   const {branchNote, commitNote, features, conservationSlug} = req.body;
+  const pendingUserStatus = await User.find({userType: "user"}).exec()
   if (user) {
     const branchSlug = randomBytes(8).toString("hex");
     const branch = new Branch({
@@ -41,6 +42,9 @@ branchRouter.post("/create", tokenAuthenticator, async (req, res, next) => {
         id: req.uid,
       },
       note: branchNote,
+      auditStatus: {
+        pending: pendingUserStatus?.length
+      }
     });
     const commitSlug = randomBytes(8).toString("hex");
     const initCommit = new Commit({
