@@ -34,7 +34,7 @@ const app: express.Application = express();
 const HOST = process.env.HOST || "localhost",
   hostUrl = "http://" + HOST + ":" + config.PORT,
   max_session_min = 180,
-  csrfProtection = csrf({ cookie: true });
+  csrfProtection = csrf({cookie: true});
 
 mongoose
   .connect(config.MONGODB_URI, {
@@ -53,14 +53,14 @@ mongoose
 app.use(cors());
 app.options("*", cors());
 // app.use(helmet());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false, limit: "1mb"}));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser());
 app.use(
   session({
     secret: "12345",
     name: "Tacare MapShare",
-    cookie: { maxAge: max_session_min * 60000 },
+    cookie: {maxAge: max_session_min * 60000},
     saveUninitialized: true,
     resave: true,
     store: new MemoryStore({
@@ -70,7 +70,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.json());
+app.use(express.json({limit: "1mb"}));
 app.use(middleware.dsHandler);
 app.use(flash());
 app.use(
@@ -147,7 +147,7 @@ const docusignStrategy = new DocusignStrategy(
 if (!dsConfig.allowSilentAuthentication) {
   // See https://stackoverflow.com/a/32877712/64904
   docusignStrategy.authorizationParams = function (options) {
-    return { prompt: "login" };
+    return {prompt: "login"};
   };
 }
 passport.use(docusignStrategy);
