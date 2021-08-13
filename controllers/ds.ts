@@ -249,8 +249,8 @@ function imageDocGen(args) {
       <head>
         <meta charset="UTF-8">
       </head>
-      <body style="width:80vw;left:10vw;position:absolute;top:5vh;">
-      <img src="${args.imageBase64}" alt="TACARE MAPSHARE VIRTUAL AUDIT IMAGE" />
+      <body>
+      <img src="${args.imageBase64}" alt="TACARE MAPSHARE VIRTUAL AUDIT IMAGE" style="width:80vw;left:10vw;position:absolute;top:5vh;"/>
       </body>
   </html>
 `
