@@ -1,7 +1,6 @@
 // Imports
 import express from "express";
 import cors from "cors";
-import helmet from "helmet";
 const mongoose = require("mongoose");
 import morgan from "morgan";
 import morganBody from "morgan-body";
@@ -9,13 +8,11 @@ const session = require("express-session");
 import path from "path";
 import passport from "passport";
 const DocusignStrategy = require("passport-docusign");
-import csrf from "csurf";
 import moment from "moment";
 import flash from "express-flash";
 import cookieParser from "cookie-parser";
 const MemoryStore = require("memorystore")(session);
 import csp from "helmet-csp";
-import bodyParser from "body-parser";
 // Routers
 import userRouter from "./controllers/users";
 import authRouter from "./controllers/auth";
@@ -33,7 +30,7 @@ const app: express.Application = express();
 
 const HOST = process.env.HOST || "localhost",
   hostUrl = "http://" + HOST + ":" + config.PORT,
-  max_session_min = 180
+  max_session_min = 180;
 
 mongoose
   .connect(config.MONGODB_URI, {
@@ -51,15 +48,14 @@ mongoose
 
 app.use(cors());
 app.options("*", cors());
-// app.use(helmet());
-app.use(express.urlencoded({extended: false, limit: "1mb"}));
+app.use(express.urlencoded({ extended: false, limit: "1mb" }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser());
 app.use(
   session({
     secret: "12345",
     name: "Tacare MapShare",
-    cookie: {maxAge: max_session_min * 60000},
+    cookie: { maxAge: max_session_min * 60000 },
     saveUninitialized: true,
     resave: true,
     store: new MemoryStore({
@@ -69,7 +65,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.json({limit: "1mb"}));
+app.use(express.json({ limit: "1mb" }));
 app.use(middleware.dsHandler);
 app.use(flash());
 app.use(
@@ -146,7 +142,7 @@ const docusignStrategy = new DocusignStrategy(
 if (!dsConfig.allowSilentAuthentication) {
   // See https://stackoverflow.com/a/32877712/64904
   docusignStrategy.authorizationParams = function (options) {
-    return {prompt: "login"};
+    return { prompt: "login" };
   };
 }
 passport.use(docusignStrategy);

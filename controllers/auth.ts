@@ -1,4 +1,4 @@
-import {generateAccessToken} from "../utils/functions";
+import { generateAccessToken } from "../utils/functions";
 import User from "../models/user";
 import * as middleware from "../utils/middleware";
 const createError = require("http-errors");
@@ -6,7 +6,7 @@ const createError = require("http-errors");
 const authRouter = require("express").Router();
 
 authRouter.put("/register", middleware.registerSchema, async (req, res, next) => {
-  const {firstName, lastName, userType, email, password} = req.body;
+  const { firstName, lastName, userType, email, password } = req.body;
   const newUser = new User({
     firstName: firstName,
     lastName: lastName,
@@ -23,14 +23,14 @@ authRouter.put("/register", middleware.registerSchema, async (req, res, next) =>
 });
 
 authRouter.post("/login", middleware.loginSchema, async (req, res, next) => {
-  const {email, password} = req.body;
+  const { email, password } = req.body;
   const user = await User.findOne({
     email: email,
   }).exec();
 
   if (user) {
     if (user.validatePassword(password)) {
-      const token = generateAccessToken({uid: user._id.toString()});
+      const token = generateAccessToken({ uid: user._id.toString() });
       res.json({
         user: user,
         token: token,

@@ -1,4 +1,4 @@
-import {model, Schema, Document} from "mongoose";
+import { model, Schema, Document } from "mongoose";
 import bcrypt from "bcrypt";
 export interface UserDoc extends Document {
   firstName: string;
@@ -13,23 +13,26 @@ export interface UserDoc extends Document {
   validatePassword: (password: string) => boolean;
 }
 
-const userSchema = new Schema<UserDoc>({
-  firstName: {type: String},
-  lastName: {type: String},
-  email: {type: String, unique: true, required: true},
-  profilePicture: {type: String},
-  userType: {
-    type: String,
-    enum: ["user", "admin"],
-    default: "user",
+const userSchema = new Schema<UserDoc>(
+  {
+    firstName: { type: String },
+    lastName: { type: String },
+    email: { type: String, unique: true, required: true },
+    profilePicture: { type: String },
+    userType: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
+    created: {
+      type: Date,
+      default: Date.now,
+    },
+    password: { type: String, required: true },
+    conservationGroups: [{ type: String }],
   },
-  created: {
-    type: Date,
-    default: Date.now,
-  },
-  password: {type: String, required: true},
-  conservationGroups: [{type: String}],
-}, {timestamps: true});
+  { timestamps: true }
+);
 
 userSchema.methods.generateHash = function (password: string) {
   return bcrypt.hashSync(password, 10);
