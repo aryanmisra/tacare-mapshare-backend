@@ -85,7 +85,6 @@ export const dsHandler = (req, res, next) => {
   res.locals.session = req.session;
   res.locals.dsConfig = dsConfig;
   res.locals.hostUrl = config.URL; // Used by DSAuthCodeGrant#logout
-  console.log(req.user, req.session);
   next();
 };
 export const dsCodeGrant = (req, res, next) => {

@@ -1,27 +1,30 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
-const commitSchema = new mongoose_1.Schema({
+const commitSchema = new mongoose_1.Schema(
+  {
     branchSlug: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
     note: { type: String },
     features: [
-        {
-            geometry: { type: String, required: true },
-            attributes: {
-                ID_NO: { type: Number },
-                NAME: { type: String },
-                POPULATION: { type: Number },
-                SUBSPECIES: { type: String },
-                BINOMIAL: { type: String },
-                CITATION: { type: String },
-                COMPILER: { type: String },
-                YEAR: { type: Number },
-            },
+      {
+        geometry: { type: String, required: true },
+        attributes: {
+          ID_NO: { type: Number },
+          NAME: { type: String },
+          POPULATION: { type: Number },
+          SUBSPECIES: { type: String },
+          BINOMIAL: { type: String },
+          CITATION: { type: String },
+          COMPILER: { type: String },
+          YEAR: { type: Number },
         },
+      },
     ],
     order: { type: Number, required: true, default: 0 },
-}, { timestamps: true });
+  },
+  { timestamps: true }
+);
 const Commit = mongoose_1.model("Commit", commitSchema);
 exports.default = Commit;
 //# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiY29tbWl0LmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vbW9kZWxzL2NvbW1pdC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOztBQUFBLHVDQUFtRDtBQXNCbkQsTUFBTSxZQUFZLEdBQUcsSUFBSSxpQkFBTSxDQUM3QjtJQUNFLFVBQVUsRUFBRSxFQUFFLElBQUksRUFBRSxNQUFNLEVBQUUsUUFBUSxFQUFFLElBQUksRUFBRTtJQUM1QyxJQUFJLEVBQUUsRUFBRSxJQUFJLEVBQUUsTUFBTSxFQUFFLFFBQVEsRUFBRSxJQUFJLEVBQUUsTUFBTSxFQUFFLElBQUksRUFBRTtJQUNwRCxJQUFJLEVBQUUsRUFBRSxJQUFJLEVBQUUsTUFBTSxFQUFFO0lBQ3RCLFFBQVEsRUFBRTtRQUNSO1lBQ0UsUUFBUSxFQUFFLEVBQUUsSUFBSSxFQUFFLE1BQU0sRUFBRSxRQUFRLEVBQUUsSUFBSSxFQUFFO1lBQzFDLFVBQVUsRUFBRTtnQkFDVixLQUFLLEVBQUUsRUFBRSxJQUFJLEVBQUUsTUFBTSxFQUFFO2dCQUN2QixJQUFJLEVBQUUsRUFBRSxJQUFJLEVBQUUsTUFBTSxFQUFFO2dCQUN0QixVQUFVLEVBQUUsRUFBRSxJQUFJLEVBQUUsTUFBTSxFQUFFO2dCQUM1QixVQUFVLEVBQUUsRUFBRSxJQUFJLEVBQUUsTUFBTSxFQUFFO2dCQUM1QixRQUFRLEVBQUUsRUFBRSxJQUFJLEVBQUUsTUFBTSxFQUFFO2dCQUMxQixRQUFRLEVBQUUsRUFBRSxJQUFJLEVBQUUsTUFBTSxFQUFFO2dCQUMxQixRQUFRLEVBQUUsRUFBRSxJQUFJLEVBQUUsTUFBTSxFQUFFO2dCQUMxQixJQUFJLEVBQUUsRUFBRSxJQUFJLEVBQUUsTUFBTSxFQUFFO2FBQ3ZCO1NBQ0Y7S0FDRjtJQUNELEtBQUssRUFBRSxFQUFFLElBQUksRUFBRSxNQUFNLEVBQUUsUUFBUSxFQUFFLElBQUksRUFBRSxPQUFPLEVBQUUsQ0FBQyxFQUFFO0NBQ3BELEVBQ0QsRUFBRSxVQUFVLEVBQUUsSUFBSSxFQUFFLENBQ3JCLENBQUM7QUFFRixNQUFNLE1BQU0sR0FBRyxnQkFBSyxDQUFZLFFBQVEsRUFBRSxZQUFZLENBQUMsQ0FBQztBQUN4RCxrQkFBZSxNQUFNLENBQUMifQ==

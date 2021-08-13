@@ -4,69 +4,106 @@
  * Example 010: Send envelope with multipart mime
  * @author DocuSign
  */
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+var __awaiter =
+  (this && this.__awaiter) ||
+  function (thisArg, _arguments, P, generator) {
+    function adopt(value) {
+      return value instanceof P
+        ? value
+        : new P(function (resolve) {
+            resolve(value);
+          });
+    }
     return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
+      function fulfilled(value) {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function rejected(value) {
+        try {
+          step(generator["throw"](value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function step(result) {
+        result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+      }
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
-};
-const path = require("path"), fs = require("fs-extra"), dsConfig = require("../../dsconfig.js").config, rp = require("request-promise-native"), validator = require("validator");
-const eg010 = exports, eg = "eg010", // This example reference.
-mustAuthenticate = "/ds/mustAuthenticate", minimumBufferMin = 3, demoDocsPath = path.resolve(__dirname, "../../demo_documents"), doc2File = "mapshare_template.docx", doc3File = "mapshare_template.pdf";
+  };
+const path = require("path"),
+  fs = require("fs-extra"),
+  dsConfig = require("../../dsconfig.js").config,
+  rp = require("request-promise-native"),
+  validator = require("validator");
+const eg010 = exports,
+  eg = "eg010", // This example reference.
+  mustAuthenticate = "/ds/mustAuthenticate",
+  minimumBufferMin = 3,
+  demoDocsPath = path.resolve(__dirname, "../../demo_documents"),
+  doc2File = "mapshare_template.docx",
+  doc3File = "mapshare_template.pdf";
 /**
  * Form page for this application
  */
 eg010.getController = (req, res) => {
-    // Check that the authentication token is ok with a long buffer time.
-    // If needed, now is the best time to ask the user to authenticate
-    // since they have not yet entered any information into the form.
-    let tokenOK = req.dsAuthCodeGrant.checkToken();
-    if (tokenOK) {
-        res.render("pages/examples/eg010", {
-            title: "Send envelope with multipart mime",
-            source: dsConfig.githubExampleUrl + path.basename(__filename),
-            documentation: dsConfig.documentation + eg,
-            showDoc: dsConfig.documentation,
-        });
-    }
-    else {
-        // Save the current operation so it will be resumed after authentication
-        req.dsAuthCodeGrant.setEg(req, eg);
-        res.redirect(mustAuthenticate);
-    }
+  // Check that the authentication token is ok with a long buffer time.
+  // If needed, now is the best time to ask the user to authenticate
+  // since they have not yet entered any information into the form.
+  let tokenOK = req.dsAuthCodeGrant.checkToken();
+  if (tokenOK) {
+    res.render("pages/examples/eg010", {
+      title: "Send envelope with multipart mime",
+      source: dsConfig.githubExampleUrl + path.basename(__filename),
+      documentation: dsConfig.documentation + eg,
+      showDoc: dsConfig.documentation,
+    });
+  } else {
+    // Save the current operation so it will be resumed after authentication
+    req.dsAuthCodeGrant.setEg(req, eg);
+    res.redirect(mustAuthenticate);
+  }
 };
 /**
  * Create envelope using multipart and sending documents in binary
  * @param {object} req Request obj
  * @param {object} res Response obj
  */
-eg010.createController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+eg010.createController = (req, res) =>
+  __awaiter(void 0, void 0, void 0, function* () {
     // Step 1. Check the token
     // At this point we should have a good token. But we
     // double-check here to enable a better UX to the user.
     let tokenOK = req.dsAuthCodeGrant.checkToken(minimumBufferMin);
     if (!tokenOK) {
-        req.flash("info", "Sorry, you need to re-authenticate.");
-        // We could store the parameters of the requested operation
-        // so it could be restarted automatically.
-        // But since it should be rare to have a token issue here,
-        // we'll make the user re-enter the form data after
-        // authentication.
-        req.dsAuthCodeGrant.setEg(req, eg);
-        res.redirect(mustAuthenticate);
+      req.flash("info", "Sorry, you need to re-authenticate.");
+      // We could store the parameters of the requested operation
+      // so it could be restarted automatically.
+      // But since it should be rare to have a token issue here,
+      // we'll make the user re-enter the form data after
+      // authentication.
+      req.dsAuthCodeGrant.setEg(req, eg);
+      res.redirect(mustAuthenticate);
     }
     // Step 2. Call the worker method
-    let body = req.body, 
-    // Additional data validation might also be appropriate
-    signerEmail = validator.escape(body.signerEmail), signerName = validator.escape(body.signerName), ccEmail = validator.escape(body.ccEmail), ccName = validator.escape(body.ccName), envelopeArgs = {
+    let body = req.body,
+      // Additional data validation might also be appropriate
+      signerEmail = validator.escape(body.signerEmail),
+      signerName = validator.escape(body.signerName),
+      ccEmail = validator.escape(body.ccEmail),
+      ccName = validator.escape(body.ccName),
+      envelopeArgs = {
         signerEmail: signerEmail,
         signerName: signerName,
         ccEmail: ccEmail,
         ccName: ccName,
-    }, accountId = req.dsAuthCodeGrant.getAccountId(), args = {
+      },
+      accountId = req.dsAuthCodeGrant.getAccountId(),
+      args = {
         basePath: (basePath = req.dsAuthCodeGrant.getBasePath()),
         accessToken: req.dsAuthCodeGrant.getAccessToken(),
         accountId: accountId,
@@ -74,36 +111,36 @@ eg010.createController = (req, res) => __awaiter(void 0, void 0, void 0, functio
         demoDocsPath: demoDocsPath,
         doc2File: doc2File,
         doc3File: doc3File,
-    }, results = null;
+      },
+      results = null;
     try {
-        results = yield eg010.worker(args);
-    }
-    catch (error) {
-        let errorBody = error && error.response && error.response.body;
-        // Since we're using the request library at a low level, the body
-        // is not automatically JSON parsed.
-        try {
-            if (errorBody) {
-                errorBody = JSON.parse(errorBody);
-            }
+      results = yield eg010.worker(args);
+    } catch (error) {
+      let errorBody = error && error.response && error.response.body;
+      // Since we're using the request library at a low level, the body
+      // is not automatically JSON parsed.
+      try {
+        if (errorBody) {
+          errorBody = JSON.parse(errorBody);
         }
-        catch (e) { }
-        // we can pull the DocuSign error code and message from the response body
-        let errorCode = errorBody && errorBody.errorCode, errorMessage = errorBody && errorBody.message;
-        // In production, may want to provide customized error messages and
-        // remediation advice to the user.
-        res.render("pages/error", { err: error, errorCode: errorCode, errorMessage: errorMessage });
+      } catch (e) {}
+      // we can pull the DocuSign error code and message from the response body
+      let errorCode = errorBody && errorBody.errorCode,
+        errorMessage = errorBody && errorBody.message;
+      // In production, may want to provide customized error messages and
+      // remediation advice to the user.
+      res.render("pages/error", { err: error, errorCode: errorCode, errorMessage: errorMessage });
     }
     if (results) {
-        req.session.envelopeId = results.envelopeId; // Save for use by other examples
-        // which need an envelopeId
-        res.render("pages/example_done", {
-            title: "Envelope sent",
-            h1: "Envelope sent",
-            message: `The envelope has been created and sent!<br/>Envelope ID ${results.envelopeId}.`,
-        });
+      req.session.envelopeId = results.envelopeId; // Save for use by other examples
+      // which need an envelopeId
+      res.render("pages/example_done", {
+        title: "Envelope sent",
+        h1: "Envelope sent",
+        message: `The envelope has been created and sent!<br/>Envelope ID ${results.envelopeId}.`,
+      });
     }
-});
+  });
 /**
  * This function does the work of creating the envelope by using
  * the API directly with multipart mime
@@ -118,35 +155,41 @@ eg010.createController = (req, res) => __awaiter(void 0, void 0, void 0, functio
  *      <tt>signerEmail</tt>, <tt>signerName</tt>, <tt>ccEmail</tt>, <tt>ccName</tt>
  */
 // ***DS.worker.start ***DS.snippet.1.start
-eg010.worker = (args) => __awaiter(void 0, void 0, void 0, function* () {
+eg010.worker = args =>
+  __awaiter(void 0, void 0, void 0, function* () {
     // Step 1. Make the envelope JSON request body
-    let envelopeJSON = makeEnvelopeJSON(args.envelopeArgs), results = null;
+    let envelopeJSON = makeEnvelopeJSON(args.envelopeArgs),
+      results = null;
     // Step 2. Gather documents and their headers
     // Read files from a local directory
     // The reads could raise an exception if the file is not available!
     let documents = [
-        {
-            mime: "text/html",
-            filename: envelopeJSON.documents[0].name,
-            documentId: envelopeJSON.documents[0].documentId,
-            bytes: document1(args.envelopeArgs),
-        },
-        {
-            mime: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            filename: envelopeJSON.documents[1].name,
-            documentId: envelopeJSON.documents[1].documentId,
-            bytes: fs.readFileSync(path.resolve(args.demoDocsPath, args.doc2File)),
-        },
-        {
-            mime: "application/pdf",
-            filename: envelopeJSON.documents[2].name,
-            documentId: envelopeJSON.documents[2].documentId,
-            bytes: fs.readFileSync(path.resolve(args.demoDocsPath, args.doc3File)),
-        },
+      {
+        mime: "text/html",
+        filename: envelopeJSON.documents[0].name,
+        documentId: envelopeJSON.documents[0].documentId,
+        bytes: document1(args.envelopeArgs),
+      },
+      {
+        mime: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        filename: envelopeJSON.documents[1].name,
+        documentId: envelopeJSON.documents[1].documentId,
+        bytes: fs.readFileSync(path.resolve(args.demoDocsPath, args.doc2File)),
+      },
+      {
+        mime: "application/pdf",
+        filename: envelopeJSON.documents[2].name,
+        documentId: envelopeJSON.documents[2].documentId,
+        bytes: fs.readFileSync(path.resolve(args.demoDocsPath, args.doc3File)),
+      },
     ];
     // Step 3. Create the multipart body
-    let CRLF = "\r\n", boundary = "multipartboundary_multipartboundary", hyphens = "--", reqBody;
-    reqBody = Buffer.from([
+    let CRLF = "\r\n",
+      boundary = "multipartboundary_multipartboundary",
+      hyphens = "--",
+      reqBody;
+    reqBody = Buffer.from(
+      [
         hyphens,
         boundary,
         CRLF,
@@ -156,37 +199,40 @@ eg010.worker = (args) => __awaiter(void 0, void 0, void 0, function* () {
         CRLF,
         CRLF,
         JSON.stringify(envelopeJSON, null, "    "),
-    ].join(""));
+      ].join("")
+    );
     // Loop to add the documents.
     // See section Multipart Form Requests on page https://developers.docusign.com/esign-rest-api/guides/requests-and-responses
     documents.forEach(d => {
-        reqBody = Buffer.concat([
-            reqBody,
-            Buffer.from([
-                CRLF,
-                hyphens,
-                boundary,
-                CRLF,
-                `Content-Type: ${d.mime}`,
-                CRLF,
-                `Content-Disposition: file; filename="${d.filename}";documentid=${d.documentId}`,
-                CRLF,
-                CRLF,
-            ].join("")),
-            Buffer.from(d.bytes),
-        ]);
+      reqBody = Buffer.concat([
+        reqBody,
+        Buffer.from(
+          [
+            CRLF,
+            hyphens,
+            boundary,
+            CRLF,
+            `Content-Type: ${d.mime}`,
+            CRLF,
+            `Content-Disposition: file; filename="${d.filename}";documentid=${d.documentId}`,
+            CRLF,
+            CRLF,
+          ].join("")
+        ),
+        Buffer.from(d.bytes),
+      ]);
     });
     // Add closing boundary
     reqBody = Buffer.concat([reqBody, Buffer.from([CRLF, hyphens, boundary, hyphens, CRLF].join(""))]);
     let options = {
-        method: "POST",
-        uri: `${args.basePath}/v2/accounts/${args.accountId}/envelopes`,
-        auth: { bearer: args.accessToken },
-        headers: {
-            Accept: "application/json",
-            "Content-Type": `multipart/form-data; boundary=${boundary}`,
-        },
-        body: reqBody,
+      method: "POST",
+      uri: `${args.basePath}/v2/accounts/${args.accountId}/envelopes`,
+      auth: { bearer: args.accessToken },
+      headers: {
+        Accept: "application/json",
+        "Content-Type": `multipart/form-data; boundary=${boundary}`,
+      },
+      body: reqBody,
     };
     // Step 2. call Envelopes::create API method
     // Exceptions will be caught by the calling function
@@ -195,7 +241,7 @@ eg010.worker = (args) => __awaiter(void 0, void 0, void 0, function* () {
     // are not automatically JSON parsed.
     results = JSON.parse(results);
     return results;
-});
+  });
 // ***DS.worker.end ***DS.snippet.1.end
 // ***DS.snippet.2.start
 /**
@@ -212,77 +258,80 @@ eg010.worker = (args) => __awaiter(void 0, void 0, void 0, function* () {
  * @private
  */
 function makeEnvelopeJSON(args) {
-    // document 1 (html) has tag **signature_1**
-    // document 2 (docx) has tag /sn1/
-    // document 3 (pdf) has tag /sn1/
-    //
-    // The envelope has two recipients.
-    // recipient 1 - signer
-    // recipient 2 - cc
-    // The envelope will be sent first to the signer.
-    // After it is signed, a copy is sent to the cc person.
-    // create the envelope definition
-    let envJSON = {};
-    envJSON.emailSubject = "Please sign this document set";
-    // add the documents
-    let doc1 = {}, doc2 = {}, doc3 = {};
-    doc1.name = "Order acknowledgement"; // can be different from actual file name
-    doc1.fileExtension = "html"; // Source data format. Signed docs are always pdf.
-    doc1.documentId = "1"; // a label used to reference the doc
-    doc2.name = "Battle Plan"; // can be different from actual file name
-    doc2.fileExtension = "docx";
-    doc2.documentId = "2";
-    doc3.name = "Lorem Ipsum"; // can be different from actual file name
-    doc3.fileExtension = "pdf";
-    doc3.documentId = "3";
-    // The order in the docs array determines the order in the envelope
-    envJSON.documents = [doc1, doc2, doc3];
-    // create a signer recipient to sign the document, identified by name and email
-    // We're setting the parameters via the object creation
-    let signer1 = {
-        email: args.signerEmail,
-        name: args.signerName,
-        recipientId: "1",
-        routingOrder: "1",
+  // document 1 (html) has tag **signature_1**
+  // document 2 (docx) has tag /sn1/
+  // document 3 (pdf) has tag /sn1/
+  //
+  // The envelope has two recipients.
+  // recipient 1 - signer
+  // recipient 2 - cc
+  // The envelope will be sent first to the signer.
+  // After it is signed, a copy is sent to the cc person.
+  // create the envelope definition
+  let envJSON = {};
+  envJSON.emailSubject = "Please sign this document set";
+  // add the documents
+  let doc1 = {},
+    doc2 = {},
+    doc3 = {};
+  doc1.name = "Order acknowledgement"; // can be different from actual file name
+  doc1.fileExtension = "html"; // Source data format. Signed docs are always pdf.
+  doc1.documentId = "1"; // a label used to reference the doc
+  doc2.name = "Battle Plan"; // can be different from actual file name
+  doc2.fileExtension = "docx";
+  doc2.documentId = "2";
+  doc3.name = "Lorem Ipsum"; // can be different from actual file name
+  doc3.fileExtension = "pdf";
+  doc3.documentId = "3";
+  // The order in the docs array determines the order in the envelope
+  envJSON.documents = [doc1, doc2, doc3];
+  // create a signer recipient to sign the document, identified by name and email
+  // We're setting the parameters via the object creation
+  let signer1 = {
+    email: args.signerEmail,
+    name: args.signerName,
+    recipientId: "1",
+    routingOrder: "1",
+  };
+  // routingOrder (lower means earlier) determines the order of deliveries
+  // to the recipients. Parallel routing order is supported by using the
+  // same integer as the order for two or more recipients.
+  // create a cc recipient to receive a copy of the documents, identified by name and email
+  // We're setting the parameters via setters
+  let cc1 = {};
+  cc1.email = args.ccEmail;
+  cc1.name = args.ccName;
+  cc1.routingOrder = "2";
+  cc1.recipientId = "2";
+  // Create signHere fields (also known as tabs) on the documents,
+  // We're using anchor (autoPlace) positioning
+  //
+  // The DocuSign platform searches throughout your envelope's
+  // documents for matching anchor strings. So the
+  // signHere2 tab will be used in both document 2 and 3 since they
+  // use the same anchor string for their "signer 1" tabs.
+  let signHere1 = {
+      anchorString: "**signature_1**",
+      anchorYOffset: "10",
+      anchorUnits: "pixels",
+      anchorXOffset: "20",
+    },
+    signHere2 = {
+      anchorString: "/sn1/",
+      anchorYOffset: "10",
+      anchorUnits: "pixels",
+      anchorXOffset: "20",
     };
-    // routingOrder (lower means earlier) determines the order of deliveries
-    // to the recipients. Parallel routing order is supported by using the
-    // same integer as the order for two or more recipients.
-    // create a cc recipient to receive a copy of the documents, identified by name and email
-    // We're setting the parameters via setters
-    let cc1 = {};
-    cc1.email = args.ccEmail;
-    cc1.name = args.ccName;
-    cc1.routingOrder = "2";
-    cc1.recipientId = "2";
-    // Create signHere fields (also known as tabs) on the documents,
-    // We're using anchor (autoPlace) positioning
-    //
-    // The DocuSign platform searches throughout your envelope's
-    // documents for matching anchor strings. So the
-    // signHere2 tab will be used in both document 2 and 3 since they
-    // use the same anchor string for their "signer 1" tabs.
-    let signHere1 = {
-        anchorString: "**signature_1**",
-        anchorYOffset: "10",
-        anchorUnits: "pixels",
-        anchorXOffset: "20",
-    }, signHere2 = {
-        anchorString: "/sn1/",
-        anchorYOffset: "10",
-        anchorUnits: "pixels",
-        anchorXOffset: "20",
-    };
-    // Tabs are set per recipient / signer
-    let signer1Tabs = { signHereTabs: [signHere1, signHere2] };
-    signer1.tabs = signer1Tabs;
-    // Add the recipients to the envelope object
-    let recipients = { signers: [signer1], carbonCopies: [cc1] };
-    envJSON.recipients = recipients;
-    // Request that the envelope be sent by setting |status| to "sent".
-    // To request that the envelope be created as a draft, set to "created"
-    envJSON.status = "sent";
-    return envJSON;
+  // Tabs are set per recipient / signer
+  let signer1Tabs = { signHereTabs: [signHere1, signHere2] };
+  signer1.tabs = signer1Tabs;
+  // Add the recipients to the envelope object
+  let recipients = { signers: [signer1], carbonCopies: [cc1] };
+  envJSON.recipients = recipients;
+  // Request that the envelope be sent by setting |status| to "sent".
+  // To request that the envelope be created as a draft, set to "created"
+  envJSON.status = "sent";
+  return envJSON;
 }
 // ***DS.snippet.2.end
 // ***DS.snippet.3.start
@@ -295,7 +344,7 @@ function makeEnvelopeJSON(args) {
  * @returns {string} A document in HTML format
  */
 function document1(args) {
-    return `
+  return `
     <!DOCTYPE html>
     <html>
         <head>

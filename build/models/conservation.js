@@ -2,14 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const conservationSchema = new mongoose_1.Schema({
-    slug: { type: String, required: true, unique: true },
-    name: { type: String, required: true },
-    description: { type: String, required: true },
-    mapUrl: { type: String, required: true },
-    coverImage: { type: String, required: true },
-    created: { type: Date, default: Date.now, required: true },
-    lastUpdated: { type: Date, default: Date.now, required: true },
-    stakeholders: [{ type: String, required: true }],
+  slug: { type: String, required: true, unique: true },
+  name: { type: String, required: true },
+  description: { type: String, required: true },
+  mapUrl: { type: String, required: true },
+  coverImage: { type: String, required: true },
+  created: { type: Date, default: Date.now, required: true },
+  lastUpdated: { type: Date, default: Date.now, required: true },
+  stakeholders: [{ type: String, required: true }],
 });
 const Conservation = mongoose_1.model("Conservation", conservationSchema);
 exports.default = Conservation;

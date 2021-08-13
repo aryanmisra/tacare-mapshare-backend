@@ -14,6 +14,7 @@ export interface BranchDoc extends Document {
     approvals: number;
     denials: number;
     pending: number;
+    envelopeId: string;
   };
   status: number;
 }
@@ -33,6 +34,7 @@ const branchSchema = new Schema<BranchDoc>(
       approvals: { type: Number, required: true, default: 0 },
       denials: { type: Number, required: true, default: 0 },
       pending: { type: Number, required: true, default: 0 },
+      envelopeId: { type: String, default: "" },
     },
     status: { type: Number, required: true, default: 0 },
   },
