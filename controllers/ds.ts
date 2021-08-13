@@ -56,7 +56,7 @@ dsRouter.get("/audit/:id/:uid", async (req, res, next) => {
   if (branch && admin) {
     let tokenOK = req.dsAuthCodeGrant.checkToken();
     if (tokenOK) {
-      res.render("pages/examples/eg002", {
+      res.render("pages/virtualAudit", {
         title: "Start Virtual Audit",
       });
     } else {
@@ -257,7 +257,7 @@ function imageDocGen(args) {
         <meta charset="UTF-8">
       </head>
       <body>
-      <img src="${args.imageBase64}" alt="TACARE MAPSHARE VIRTUAL AUDIT IMAGE"/>
+      <img src="${args.imageBase64}" alt="TACARE MAPSHARE VIRTUAL AUDIT IMAGE" width="400px"/>
       </body>
   </html>
 `
