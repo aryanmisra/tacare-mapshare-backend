@@ -5,7 +5,7 @@ exports.config = {
   dsClientSecret: process.env.DS_CLIENT_SECRET || config.dsClientSecret,
   signerEmail: process.env.DS_SIGNER_EMAIL || "{USER_EMAIL}",
   signerName: process.env.DS_SIGNER_NAME || "{USER_NAME}",
-  appUrl: process.env.DS_APP_URL || "http://localhost:5000",
+  appUrl: process.env.ENVIRONMENT === "production" ? "https://tacare-api.herokuapp.com" : "http://localhost:5000",
   production: false,
   debug: true,
   sessionSecret: "12345",

@@ -28,8 +28,7 @@ const dsConfig = require("./dsconfig.js");
 //Setups
 const app: express.Application = express();
 
-const HOST = process.env.HOST || "localhost",
-  hostUrl = "http://" + HOST + ":" + config.PORT,
+const hostUrl = config.URL,
   max_session_min = 180;
 
 mongoose
