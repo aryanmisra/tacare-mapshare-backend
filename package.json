@@ -21,7 +21,7 @@
     "@types/csurf": "^1.11.2",
     "@types/express-flash": "^0.0.2",
     "@types/express-session": "^1.17.4",
-    "@types/jsonwebtoken": "^8.5.4",
+    "@types/jsonwebtoken": "^8.5.5",
     "@types/moment": "^2.13.0",
     "@types/passport": "^1.0.7",
     "axios": "^0.21.1",
