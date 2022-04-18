@@ -37,7 +37,7 @@
     "express-flash": "^0.0.2",
     "express-session": "^1.17.2",
     "fs": "^0.0.1-security",
-    "fs-extra": "^10.0.0",
+    "fs-extra": "^10.1.0",
     "helmet": "^4.6.0",
     "helmet-csp": "^3.4.0",
     "http-errors": "^1.8.0",
