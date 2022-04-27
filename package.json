@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@types/bcrypt": "^5.0.0",
-    "@types/cookie-parser": "^1.4.2",
+    "@types/cookie-parser": "^1.4.3",
     "@types/csurf": "^1.11.2",
     "@types/express-flash": "^0.0.2",
     "@types/express-session": "^1.17.4",
