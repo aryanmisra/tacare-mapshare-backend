@@ -47,7 +47,7 @@
     "moment": "^2.29.1",
     "mongoose": "^5.12.12",
     "morgan": "^1.10.0",
-    "morgan-body": "^2.6.5",
+    "morgan-body": "^2.6.8",
     "nodemailer": "^6.6.1",
     "npm": "^7.15.0",
     "passport": "^0.4.1",
